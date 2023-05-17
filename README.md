@@ -6,4 +6,4 @@ Plays a single file.
 
 Use it as a base to develop another project
 
-See also [Assets/README.md]()
+See also [Assets/README.md](Assets/README.md)
