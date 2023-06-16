@@ -15,6 +15,10 @@ public class CameraControlKeyboard : MonoBehaviour
     public KeyCode zoomOut = KeyCode.O;
 
     public float speed = 1;
+    public float accel = 1;
+
+    Vector3 vSpeed;
+    Vector3 vTargetSpeed;
 
     Camera cam;
 
@@ -27,17 +31,21 @@ public class CameraControlKeyboard : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float move = speed * Time.deltaTime;
+        vTargetSpeed.x = Input.GetAxis("Vertical") * speed;
+        vTargetSpeed.y = Input.GetAxis("Horizontal") * speed;
+        vTargetSpeed.z = Input.GetAxis("Zoom") * speed;
+
+        vSpeed = vTargetSpeed * Time.deltaTime;
 
         // Rotate up down arount camera's x axis
-        cam.transform.Rotate((Input.GetKey(lookUp) ? -move : 0) + (Input.GetKey(lookDown) ? move : 0), 0, 0);
+        cam.transform.Rotate(-vSpeed.x, 0, 0);
 
         // Rotate left right around world's vertical axis
-        cam.transform.Rotate(0, (Input.GetKey(lookLeft) ? -move : 0) + (Input.GetKey(lookRight) ? move : 0), 0, Space.World);
+        cam.transform.Rotate(0, vSpeed.y, 0, Space.World);
 
         // Zoom
         float fov = cam.fieldOfView;
-        fov += (Input.GetKey(zoomIn) ? -move : 0) + (Input.GetKey(zoomOut) ? move : 0);
+        fov += vSpeed.z;
         cam.fieldOfView = Mathf.Clamp(fov, 0, 179);
 
     }
